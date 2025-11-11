@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laporan Surat Keluar - PT Sinar Jaya</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/auth.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      @media print {
+        @page {
+          size: landscape;
+          margin: 1.5cm;
+        }
+        body {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        .print-hide {
+          display: none !important;
+        }
+        #report-container {
+          box-shadow: none !important;
+          border: none !important;
+        }
+        .record-block {
+          page-break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-200">
+    <div
+      class="print-hide container mx-auto p-4 flex justify-between items-center"
+    >
+      <a
+        href="index.html"
+        class="bg-red-800 hover:bg-red-900 text-white font-bold py-2 px-4 rounded-lg transition"
+      >
+        <i class="fas fa-arrow-left mr-2"></i> Kembali ke Dashboard
+      </a>
+      <button
+        onclick="window.print()"
+        class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-lg transition"
+      >
+        <i class="fas fa-print mr-2"></i> Print / Save as PDF
+      </button>
+    </div>
+
+    <div id="report-container" class="container mx-auto p-6 bg-white shadow-lg">
+      <header
+        class="bg-gradient-to-r from-red-900 to-red-700 text-white p-4 flex justify-between items-center"
+      >
+        <div class="flex items-center">
+          <i class="fas fa-book-open text-4xl mr-4"></i>
+          <div>
+            <h1 class="text-xl font-bold">PT SINAR JAYA</h1>
+            <p class="text-xs">(Mitra Bangun Karya Mandiri)</p>
+            <p class="text-xs">
+              Jalan Ahmad Yani Nomor 161 Palembang, 30161
+            </p>
+          </div>
+        </div>
+        <div class="text-right">
+          <h2 class="text-lg font-bold">LAPORAN SURAT KELUAR</h2>
+          <p id="report-datetime" class="text-xs"></p>
+        </div>
+      </header>
+
+      <main id="report-body" class="p-4 space-y-6"></main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const formatDate = (dateStr) => {
+          if (!dateStr) return "-"
+          return new Date(dateStr).toLocaleDateString("id-ID", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          })
+        }
+
+        const now = new Date()
+        const options = {
+          timeZone: "Asia/Jakarta",
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }
+        document.getElementById("report-datetime").textContent =
+          now.toLocaleString("id-ID", options) + " WIB"
+
+        const data =
+          JSON.parse(localStorage.getItem("reformaIndahSuratKeluarData")) || []
+        data.sort((a, b) => Number(a.No_Agenda) - Number(b.No_Agenda))
+
+        const reportBody = document.getElementById("report-body")
+
+        if (data.length === 0) {
+          reportBody.innerHTML =
+            '<p class="text-center p-10 text-gray-500">Tidak ada data untuk ditampilkan.</p>'
+          return
+        }
+
+        let content = ""
+        data.forEach((item) => {
+          const imageHtml = item.Photo
+            ? `<a href="images/surat-keluar/${item.Photo}" target="_blank"><img src="images/surat-keluar/${item.Photo}" class="w-full h-auto border rounded-md shadow-md object-contain max-h-64"></a>`
+            : '<div class="flex items-center justify-center w-full h-full bg-gray-100 rounded-md border-dashed border-2 p-10"><p class="text-gray-400">Tidak Ada Gambar</p></div>'
+
+          content += `
+            <div class="record-block border-2 border-gray-300 p-4 flex flex-col md:flex-row gap-4">
+                <div class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-x-6 text-sm">
+                    <div class="space-y-1">
+                        <div class="flex"><p class="w-2/5 font-bold">No. Agenda</p><p class="flex-1">: ${
+                          item.No_Agenda || "-"
+                        }</p></div>
+                        <div class="flex"><p class="w-2/5 font-bold">No. Surat</p><p class="flex-1">: ${
+                          item.Nomor_Surat || "-"
+                        }</p></div>
+                        <div class="flex"><p class="w-2/5 font-bold">Tanggal Surat</p><p class="flex-1">: ${formatDate(
+                          item.Tanggal_Surat
+                        )}</p></div>
+                        <div class="flex"><p class="w-2/5 font-bold">Tujuan Surat</p><p class="flex-1">: ${
+                          item.Nama_Perusahaan || "-"
+                        }</p></div>
+                        <div class="flex"><p class="w-2/5 font-bold">Alamat</p><p class="flex-1">: ${
+                          item.Alamat_Perusahaan || "-"
+                        }</p></div>
+                    </div>
+                    <div class="space-y-1">
+                         <div class="flex"><p class="w-2/5 font-bold">Sifatnya</p><p class="flex-1">: ${
+                           item.Sifatnya || "-"
+                         }</p></div>
+                        <div class="flex"><p class="w-2/5 font-bold">Hal</p><p class="flex-1">: ${
+                          item.Hal || "-"
+                        }</p></div>
+                        <div class="flex"><p class="w-2/5 font-bold">Penandatangan</p><p class="flex-1">: ${
+                          item.Penandatangan || "-"
+                        }</p></div>
+                    </div>
+                </div>
+                <div class="md:w-2/5 flex-shrink-0">
+                    ${imageHtml}
+                </div>
+            </div>
+          `
+        })
+        reportBody.innerHTML = content
+      })
+    </script>
+  </body>
+</html>
