@@ -11,6 +11,9 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
     <style>
+      body {
+        background-color: #f3f4f6;
+      }
       @media print {
         @page {
           size: landscape;
@@ -20,7 +23,11 @@
           -webkit-print-color-adjust: exact;
           print-color-adjust: exact;
         }
-        .print-hide {
+        .print-hide,
+        #sidebar,
+        #sidebarOverlay,
+        .page-chrome,
+        .page-footer {
           display: none !important;
         }
         #report-container {
@@ -33,47 +40,195 @@
       }
     </style>
   </head>
-  <body class="bg-gray-200">
-    <div
-      class="print-hide container mx-auto p-4 flex justify-between items-center"
-    >
-      <a
-        href="index.html"
-        class="bg-red-800 hover:bg-red-900 text-white font-bold py-2 px-4 rounded-lg transition"
-      >
-        <i class="fas fa-arrow-left mr-2"></i> Kembali ke Dashboard
-      </a>
-      <button
-        onclick="window.print()"
-        class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-lg transition"
-      >
-        <i class="fas fa-print mr-2"></i> Print / Save as PDF
-      </button>
-    </div>
+  <body class="bg-gray-100 min-h-screen">
+    <div class="flex min-h-screen">
+      <div
+        id="sidebarOverlay"
+        class="fixed inset-0 bg-black/40 z-30 hidden md:hidden"
+      ></div>
 
-    <div id="report-container" class="container mx-auto p-6 bg-white shadow-lg">
-      <header
-        class="bg-gradient-to-r from-red-900 to-red-700 text-white p-4 flex justify-between items-center"
+      <aside
+        id="sidebar"
+        class="fixed inset-y-0 left-0 z-40 w-72 md:w-64 transform -translate-x-full md:translate-x-0 transition-transform duration-300 bg-gradient-to-b from-red-900 via-red-800 to-red-700 text-white shadow-xl flex flex-col"
       >
-        <div class="flex items-center">
-          <i class="fas fa-folder-open text-4xl mr-4"></i>
+        <div class="p-6 flex items-center gap-4">
+          <img
+            src="images/logo.png"
+            alt="Logo"
+            class="h-16 w-16 object-contain"
+          />
           <div>
-            <h1 class="text-xl font-bold">PT SINAR JAYA</h1>
-            <p class="text-xs">(Mitra Bangun Karya Mandiri)</p>
-            <p class="text-xs">
-              Jalan Ahmad Yani Nomor 161 Palembang, 30161
+            <p class="text-xs uppercase tracking-widest text-red-200">
+              PT Sinar Jaya
+            </p>
+            <p class="text-lg font-bold leading-tight">
+              Electronic Filling System
             </p>
           </div>
         </div>
-        <div class="text-right">
-          <h2 class="text-lg font-bold">LAPORAN SURAT MASUK</h2>
-          <p id="report-datetime" class="text-xs"></p>
-        </div>
-      </header>
+        <nav class="flex-1 px-4 space-y-1">
+          <a
+            href="home.html"
+            data-nav-link="true"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg text-red-100 hover:bg-white/10 transition"
+          >
+            <i class="fas fa-gauge"></i>
+            <span>Dashboard</span>
+          </a>
+          <a
+            href="surat-masuk.html"
+            data-nav-link="true"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg text-red-100 hover:bg-white/10 transition"
+          >
+            <i class="fas fa-envelope-open-text"></i>
+            <span>Surat Masuk</span>
+          </a>
+          <a
+            href="surat-keluar.html"
+            data-nav-link="true"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg text-red-100 hover:bg-white/10 transition"
+          >
+            <i class="fas fa-paper-plane"></i>
+            <span>Surat Keluar</span>
+          </a>
+          <a
+            href="laporan-masuk.html"
+            data-nav-link="true"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg text-red-100 hover:bg-white/10 transition"
+          >
+            <i class="fas fa-file-alt"></i>
+            <span>Laporan Surat Masuk</span>
+          </a>
+          <a
+            href="laporan-keluar.html"
+            data-nav-link="true"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg text-red-100 hover:bg-white/10 transition"
+          >
+            <i class="fas fa-file-invoice"></i>
+            <span>Laporan Surat Keluar</span>
+          </a>
+        </nav>
+      </aside>
 
-      <main id="report-body" class="p-4 space-y-6"></main>
+      <div class="flex-1 flex flex-col w-full md:pl-64">
+        <header
+          class="page-chrome bg-white shadow-sm px-6 py-4 flex items-center justify-between sticky top-0 z-20"
+        >
+          <div class="flex items-center gap-4">
+            <button
+              id="sidebarToggle"
+              class="md:hidden text-red-800 hover:text-red-900 transition"
+            >
+              <i class="fas fa-bars text-2xl"></i>
+            </button>
+            <div>
+              <h1 class="text-2xl md:text-3xl font-extrabold text-red-900 leading-tight">
+                Electronic Filling System
+              </h1>
+              <p class="text-sm font-semibold text-gray-500">
+                PT Sinar Jaya (Mitra Bangun Karya Mandiri)
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-6 text-red-900 font-semibold">
+            <div class="text-right hidden sm:block">
+              <p id="currentDate" class="text-sm text-gray-500"></p>
+              <p id="currentTime" class="text-xl font-bold"></p>
+            </div>
+            <div class="relative">
+              <button
+                id="userMenuToggle"
+                class="flex items-center gap-2 bg-red-100 text-red-800 hover:bg-red-200 px-3 py-2 rounded-full font-semibold transition"
+              >
+                <span id="currentUserName" class="hidden sm:inline"></span>
+                <i class="fas fa-user-circle text-2xl"></i>
+              </button>
+              <div
+                id="userMenu"
+                class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden"
+              >
+                <button
+                  id="logout"
+                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-50 flex items-center gap-2"
+                >
+                  <i class="fas fa-sign-out-alt text-red-600"></i>
+                  Keluar
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto bg-gray-100 p-6 space-y-6">
+          <section
+            class="print-hide bg-white rounded-2xl shadow-md p-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+          >
+            <div>
+              <h2 class="text-2xl font-bold text-red-900">
+                Laporan Surat Masuk
+              </h2>
+            </div>
+            <div class="flex flex-wrap gap-2 justify-end">
+              <button
+                onclick="window.print()"
+                class="bg-red-700 hover:bg-red-800 text-white font-bold py-2.5 px-4 rounded-lg transition flex items-center gap-2"
+              >
+                <i class="fas fa-print"></i>
+                Print / Save as PDF
+              </button>
+            </div>
+          </section>
+
+          <section>
+            <div
+              id="report-container"
+              class="bg-white shadow-lg rounded-2xl overflow-hidden max-w-6xl mx-auto"
+            >
+              <header
+                class="bg-gradient-to-r from-red-900 to-red-700 text-white p-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+              >
+                <div class="flex items-center">
+                  <i class="fas fa-folder-open text-4xl mr-4"></i>
+                  <div>
+                    <h1 class="text-xl font-bold">PT SINAR JAYA</h1>
+                    <p class="text-xs">(Mitra Bangun Karya Mandiri)</p>
+                    <p class="text-xs">
+                      Jalan Ahmad Yani Nomor 161 Palembang, 30161
+                    </p>
+                  </div>
+                </div>
+                <div class="text-left md:text-right">
+                  <h2 class="text-lg font-bold">LAPORAN SURAT MASUK</h2>
+                  <p id="report-datetime" class="text-xs"></p>
+                </div>
+              </header>
+
+              <main id="report-body" class="p-4 space-y-6"></main>
+            </div>
+          </section>
+        </main>
+
+        <footer
+          class="page-footer bg-white shadow-inner px-6 py-4 text-center text-xs text-red-900"
+        >
+          <p>
+            <span class="font-bold"
+              >PT SINAR JAYA (Mitra Bangun Karya Mandiri)</span
+            >
+            |
+            <span class="italic"
+              >Jalan Ahmad Yani Nomor 161 Palembang, 30161</span
+            >
+            |
+            <span>Telp: (0711) 555-1234</span> |
+            <span>Email: info@sinarjaya.com</span> |
+            <span>Laman: www.sinarjayakarya.com</span>
+          </p>
+        </footer>
+      </div>
     </div>
 
+    <script src="js/layout.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const formatDate = (dateStr) => {
@@ -110,17 +265,22 @@
         }
 
         let content = ""
-        data.forEach((item) => {
-          const imageHtml = item.Photo
-            ? `<a href="images/surat-masuk/${item.Photo}" target="_blank"><img src="images/surat-masuk/${item.Photo}" class="w-full h-auto border rounded-md shadow-md object-contain max-h-64"></a>`
-            : '<div class="flex items-center justify-center w-full h-full bg-gray-100 rounded-md border-dashed border-2 p-10"><p class="text-gray-400">Tidak Ada Gambar</p></div>'
+        data.forEach((itemRaw) => {
+          const item = {
+            ...itemRaw,
+            Kementerian: itemRaw.Kementerian ?? itemRaw.Sifatnya ?? "",
+            Sifat: itemRaw.Sifat ?? "",
+          }
 
           content += `
-            <div class="record-block border-2 border-gray-300 p-4 flex flex-col md:flex-row gap-4">
-                <div class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-x-6 text-sm">
+            <div class="record-block border-2 border-gray-300 p-4 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 text-sm">
                     <div class="space-y-1">
-                        <div class="flex"><p class="w-2/5 font-bold">No. Agenda</p><p class="flex-1">: ${
+                        <div class="flex"><p class="w-2/5 font-bold">No. Urut Agenda</p><p class="flex-1">: ${
                           item.No_Agenda || "-"
+                        }</p></div>
+                        <div class="flex"><p class="w-2/5 font-bold">Kementerian</p><p class="flex-1">: ${
+                          item.Kementerian || "-"
                         }</p></div>
                         <div class="flex"><p class="w-2/5 font-bold">No. Surat</p><p class="flex-1">: ${
                           item.Nomor_Surat || "-"
@@ -133,9 +293,6 @@
                         }</p></div>
                         <div class="flex"><p class="w-2/5 font-bold">Alamat</p><p class="flex-1">: ${
                           item.Alamat_Perusahaan || "-"
-                        }</p></div>
-                        <div class="flex"><p class="w-2/5 font-bold">Sifatnya</p><p class="flex-1">: ${
-                          item.Sifatnya || "-"
                         }</p></div>
                     </div>
                     <div class="space-y-1">
@@ -151,10 +308,10 @@
                         <div class="flex"><p class="w-2/5 font-bold text-red-600">Tgl. Pemusnahan</p><p class="flex-1 text-red-600">: ${formatDate(
                           item.Tanggal_Pemusnahan
                         )}</p></div>
+                        <div class="flex"><p class="w-2/5 font-bold">Sifat</p><p class="flex-1">: ${
+                          item.Sifat || "-"
+                        }</p></div>
                     </div>
-                </div>
-                <div class="md:w-2/5 flex-shrink-0">
-                    ${imageHtml}
                 </div>
             </div>
           `

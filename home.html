@@ -24,199 +24,425 @@
       }
     </style>
   </head>
-  <body class="flex flex-col min-h-screen bg-gray-50">
-    <header class="bg-white/90 shadow-md backdrop-blur-sm sticky top-0 z-10">
+  <body class="bg-gray-100 min-h-screen">
+    <div class="flex min-h-screen">
       <div
-        class="container mx-auto px-4 py-2 flex justify-between items-center"
+        id="sidebarOverlay"
+        class="fixed inset-0 bg-black/40 z-30 hidden md:hidden"
+      ></div>
+
+      <aside
+        id="sidebar"
+        class="fixed inset-y-0 left-0 z-40 w-72 md:w-64 transform -translate-x-full md:translate-x-0 transition-transform duration-300 bg-gradient-to-b from-red-900 via-red-800 to-red-700 text-white shadow-xl flex flex-col"
       >
-        <div class="flex-shrink-0">
-          <img src="images/logo.png" alt="Logo" class="h-20" />
+        <div class="p-6 flex items-center gap-4">
+          <img
+            src="images/logo.png"
+            alt="Logo"
+            class="h-16 w-16 object-contain"
+          />
+          <div>
+            <p class="text-xs uppercase tracking-widest text-red-200">
+              PT Sinar Jaya
+            </p>
+            <p class="text-lg font-bold leading-tight">
+              Electronic Filling System
+            </p>
+          </div>
         </div>
-        <div class="text-center text-red-900">
-          <p class="font-bold text-lg">ELECTRONIC FILLING SYSTEM</p>
-          <p class="font-extrabold text-2xl">PT SINAR JAYA</p>
-          <p class="font-semibold text-lg">(Mitra Bangun Karya Mandiri)</p>
-        </div>
-        <div class="flex gap-3 text-right text-red-900 font-semibold">
-          <div>
-            <p id="currentDate">Monday, 23 June 2025</p>
-            <p id="currentTime" class="text-2xl font-bold">01:50:49</p>
-          </div>
-          <button
-            id="logout"
-            class="text-3xl text-red-800 hover:text-red-900 transition-colors duration-300"
+        <nav class="flex-1 px-4 space-y-1">
+          <a
+            href="home.html"
+            data-nav-link="true"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg text-red-100 hover:bg-white/10 transition"
           >
-            <i class="fas fa-sign-out-alt"></i>
-          </button>
-        </div>
-      </div>
-    </header>
+            <i class="fas fa-gauge"></i>
+            <span>Dashboard</span>
+          </a>
+          <a
+            href="surat-masuk.html"
+            data-nav-link="true"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg text-red-100 hover:bg-white/10 transition"
+          >
+            <i class="fas fa-envelope-open-text"></i>
+            <span>Surat Masuk</span>
+          </a>
+          <a
+            href="surat-keluar.html"
+            data-nav-link="true"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg text-red-100 hover:bg-white/10 transition"
+          >
+            <i class="fas fa-paper-plane"></i>
+            <span>Surat Keluar</span>
+          </a>
+          <a
+            href="laporan-masuk.html"
+            data-nav-link="true"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg text-red-100 hover:bg-white/10 transition"
+          >
+            <i class="fas fa-file-alt"></i>
+            <span>Laporan Surat Masuk</span>
+          </a>
+          <a
+            href="laporan-keluar.html"
+            data-nav-link="true"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg text-red-100 hover:bg-white/10 transition"
+          >
+            <i class="fas fa-file-invoice"></i>
+            <span>Laporan Surat Keluar</span>
+          </a>
+        </nav>
+      </aside>
 
-    <main
-      class="flex-grow flex flex-col items-center justify-center container mx-auto p-4 md:p-8"
-    >
-      <div
-        class="w-full max-w-5xl bg-gradient-to-r from-red-900 to-red-700 p-6 rounded-lg shadow-xl mb-8"
-      >
-        <h1 class="text-white text-center text-3xl font-bold">
-          <span id="typed-welcome"></span>
-        </h1>
-      </div>
-
-      <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6">
-        <a
-          href="surat-masuk.html"
-          class="menu-card group bg-white p-6 rounded-lg shadow-lg border border-gray-200 flex items-start space-x-4"
+      <div class="flex-1 flex flex-col w-full md:pl-64">
+        <header
+          class="bg-white shadow-sm px-6 py-4 flex items-center justify-between sticky top-0 z-20"
         >
-          <div
-            class="flex-shrink-0 bg-red-100 text-red-700 p-4 rounded-full transition-colors duration-300 group-hover:bg-red-200"
-          >
-            <i class="fas fa-envelope-open-text fa-2x"></i>
-          </div>
-          <div>
-            <h2
-              class="text-xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-red-700"
+          <div class="flex items-center gap-4">
+            <button
+              id="sidebarToggle"
+              class="md:hidden text-red-800 hover:text-red-900 transition"
             >
-              Surat Masuk
-            </h2>
-            <p class="text-gray-600 mt-1">
-              Kelola semua arsip surat yang diterima perusahaan.
-            </p>
+              <i class="fas fa-bars text-2xl"></i>
+            </button>
+            <div>
+              <h1 class="text-2xl md:text-3xl font-extrabold text-red-900 leading-tight">
+                Electronic Filling System
+              </h1>
+              <p class="text-sm font-semibold text-gray-500">
+                PT Sinar Jaya (Mitra Bangun Karya Mandiri)
+              </p>
+            </div>
           </div>
-        </a>
+          <div class="flex items-center gap-6 text-red-900 font-semibold">
+            <div class="text-right hidden sm:block">
+              <p id="currentDate" class="text-sm text-gray-500"></p>
+              <p id="currentTime" class="text-xl font-bold"></p>
+            </div>
+            <div class="relative">
+              <button
+                id="userMenuToggle"
+                class="flex items-center gap-2 bg-red-100 text-red-800 hover:bg-red-200 px-3 py-2 rounded-full font-semibold transition"
+              >
+                <span id="currentUserName" class="hidden sm:inline"></span>
+                <i class="fas fa-user-circle text-2xl"></i>
+              </button>
+              <div
+                id="userMenu"
+                class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden"
+              >
+                <button
+                  id="logout"
+                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-50 flex items-center gap-2"
+                >
+                  <i class="fas fa-sign-out-alt text-red-600"></i>
+                  Keluar
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
 
-        <a
-          href="surat-keluar.html"
-          class="menu-card group bg-white p-6 rounded-lg shadow-lg border border-gray-200 flex items-start space-x-4"
-        >
+        <main class="flex-1 overflow-y-auto bg-gray-100 p-6 space-y-6">
           <div
-            class="flex-shrink-0 bg-red-100 text-red-700 p-4 rounded-full transition-colors duration-300 group-hover:bg-red-200"
+            class="w-full bg-gradient-to-r from-red-900 to-red-700 p-4 rounded-lg shadow-xl"
           >
-            <i class="fas fa-paper-plane fa-2x"></i>
+            <h1 class="text-white text-center text-lg md:text-xl font-bold">
+              <span id="typed-welcome"></span>
+            </h1>
           </div>
-          <div>
-            <h2
-              class="text-xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-red-700"
-            >
-              Surat Keluar
-            </h2>
-            <p class="text-gray-600 mt-1">
-              Kelola semua arsip surat yang dikirimkan perusahaan.
-            </p>
-          </div>
-        </a>
+          <section class="space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <h3 class="text-xl font-bold text-red-900">Dashboard</h3>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="bg-white rounded-2xl shadow p-6 border border-red-100 flex items-center justify-between">
+                <div>
+                  <p class="text-sm uppercase tracking-widest text-red-600">
+                    Surat Masuk
+                  </p>
+                  <p id="totalSuratMasuk" class="text-4xl font-extrabold text-red-900">
+                    0
+                  </p>
+                  <p class="text-sm text-gray-500">
+                    Jumlah arsip surat masuk tersimpan.
+                  </p>
+                </div>
+                <span class="h-14 w-14 flex items-center justify-center rounded-full bg-red-100 text-red-700 text-2xl">
+                  <i class="fas fa-envelope-open-text"></i>
+                </span>
+              </div>
+              <div class="bg-white rounded-2xl shadow p-6 border border-red-100 flex items-center justify-between">
+                <div>
+                  <p class="text-sm uppercase tracking-widest text-red-600">
+                    Surat Keluar
+                  </p>
+                  <p id="totalSuratKeluar" class="text-4xl font-extrabold text-red-900">
+                    0
+                  </p>
+                  <p class="text-sm text-gray-500">
+                    Jumlah arsip surat keluar tersimpan.
+                  </p>
+                </div>
+                <span class="h-14 w-14 flex items-center justify-center rounded-full bg-red-100 text-red-700 text-2xl">
+                  <i class="fas fa-paper-plane"></i>
+                </span>
+              </div>
+            </div>
+          </section>
 
-        <a
-          href="laporan-masuk.html"
-          class="menu-card group bg-white p-6 rounded-lg shadow-lg border border-gray-200 flex items-start space-x-4"
-        >
-          <div
-            class="flex-shrink-0 bg-red-100 text-red-700 p-4 rounded-full transition-colors duration-300 group-hover:bg-red-200"
-          >
-            <i class="fas fa-file-alt fa-2x"></i>
-          </div>
-          <div>
-            <h2
-              class="text-xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-red-700"
-            >
-              Laporan Surat Masuk
-            </h2>
-            <p class="text-gray-600 mt-1">
-              Cetak rekapitulasi dari semua data surat masuk.
-            </p>
-          </div>
-        </a>
+          <section class="space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <h3 class="text-xl font-bold text-red-900">Grafik 7 Hari Terakhir</h3>
+            </div>
+            <div class="bg-white rounded-2xl shadow p-6 border border-red-100">
+              <canvas id="suratChart" height="160"></canvas>
+            </div>
+          </section>
 
-        <a
-          href="laporan-keluar.html"
-          class="menu-card group bg-white p-6 rounded-lg shadow-lg border border-gray-200 flex items-start space-x-4"
-        >
-          <div
-            class="flex-shrink-0 bg-red-100 text-red-700 p-4 rounded-full transition-colors duration-300 group-hover:bg-red-200"
-          >
-            <i class="fas fa-file-invoice fa-2x"></i>
-          </div>
-          <div>
-            <h2
-              class="text-xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-red-700"
+          <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            <a
+              href="surat-masuk.html"
+              class="group bg-white rounded-2xl shadow p-6 border border-gray-100 hover:border-red-200 hover:shadow-lg transition transform hover:-translate-y-1 flex flex-col gap-5"
             >
-              Laporan Surat Keluar
-            </h2>
-            <p class="text-gray-600 mt-1">
-              Cetak rekapitulasi dari semua data surat keluar.
-            </p>
-          </div>
-        </a>
+              <div class="flex items-center gap-4">
+                <span
+                  class="p-4 rounded-2xl bg-red-100 text-red-700 text-2xl transition group-hover:bg-red-200"
+                >
+                  <i class="fas fa-envelope-open-text"></i>
+                </span>
+                <span class="text-xl font-semibold text-gray-900 group-hover:text-red-900"
+                  >Surat Masuk</span
+                >
+              </div>
+              <div class="flex items-center justify-between text-sm font-medium text-red-700 group-hover:text-red-900">
+                <span>Kelola data</span>
+                <i class="fas fa-circle-arrow-right"></i>
+              </div>
+            </a>
+
+            <a
+              href="surat-keluar.html"
+              class="group bg-white rounded-2xl shadow p-6 border border-gray-100 hover:border-red-200 hover:shadow-lg transition transform hover:-translate-y-1 flex flex-col gap-5"
+            >
+              <div class="flex items-center gap-4">
+                <span
+                  class="p-4 rounded-2xl bg-red-100 text-red-700 text-2xl transition group-hover:bg-red-200"
+                >
+                  <i class="fas fa-paper-plane"></i>
+                </span>
+                <span class="text-xl font-semibold text-gray-900 group-hover:text-red-900"
+                  >Surat Keluar</span
+                >
+              </div>
+              <div class="flex items-center justify-between text-sm font-medium text-red-700 group-hover:text-red-900">
+                <span>Kelola data</span>
+                <i class="fas fa-circle-arrow-right"></i>
+              </div>
+            </a>
+
+            <a
+              href="laporan-masuk.html"
+              class="group bg-white rounded-2xl shadow p-6 border border-gray-100 hover:border-red-200 hover:shadow-lg transition transform hover:-translate-y-1 flex flex-col gap-5"
+            >
+              <div class="flex items-center gap-4">
+                <span
+                  class="p-4 rounded-2xl bg-red-100 text-red-700 text-2xl transition group-hover:bg-red-200"
+                >
+                  <i class="fas fa-file-alt"></i>
+                </span>
+                <span class="text-xl font-semibold text-gray-900 group-hover:text-red-900"
+                  >Laporan Masuk</span
+                >
+              </div>
+              <div class="flex items-center justify-between text-sm font-medium text-red-700 group-hover:text-red-900">
+                <span>Cetak data</span>
+                <i class="fas fa-circle-arrow-right"></i>
+              </div>
+            </a>
+
+            <a
+              href="laporan-keluar.html"
+              class="group bg-white rounded-2xl shadow p-6 border border-gray-100 hover:border-red-200 hover:shadow-lg transition transform hover:-translate-y-1 flex flex-col gap-5"
+            >
+              <div class="flex items-center gap-4">
+                <span
+                  class="p-4 rounded-2xl bg-red-100 text-red-700 text-2xl transition group-hover:bg-red-200"
+                >
+                  <i class="fas fa-file-invoice"></i>
+                </span>
+                <span class="text-xl font-semibold text-gray-900 group-hover:text-red-900"
+                  >Laporan Keluar</span
+                >
+              </div>
+              <div class="flex items-center justify-between text-sm font-medium text-red-700 group-hover:text-red-900">
+                <span>Cetak data</span>
+                <i class="fas fa-circle-arrow-right"></i>
+              </div>
+            </a>
+          </section>
+        </main>
+
+        <footer class="bg-white shadow-inner px-6 py-4 text-center text-xs text-red-900">
+          <p>
+            <span class="font-bold"
+              >PT SINAR JAYA (Mitra Bangun Karya Mandiri)</span
+            >
+            |
+            <span class="italic"
+              >Jalan Ahmad Yani Nomor 161 Palembang, 30161</span
+            >
+            |
+            <span>Telp: (0711) 555-1234</span> |
+            <span>Email: info@sinarjaya.com</span> |
+            <span>Laman: www.sinarjayakarya.com</span>
+          </p>
+        </footer>
       </div>
-    </main>
+    </div>
 
-    <footer class="bg-white/90 backdrop-blur-sm shadow-inner mt-auto w-full">
-      <div
-        class="container mx-auto px-4 py-3 text-center text-red-900 text-xs"
-      >
-        <p>
-          <span class="font-bold"
-            >PT SINAR JAYA (Mitra Bangun Karya Mandiri)</span
-          >
-          |
-          <span class="italic"
-            >Jalan Ahmad Yani Nomor 161 Palembang, 30161</span
-          >
-          |
-          <span>Telp: (0711) 555-1234</span> |
-          <span>Email: info@sinarjaya.com</span> |
-          <span>Laman: www.sinarjayakarya.com</span>
-        </p>
-      </div>
-    </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/layout.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var typed = new Typed("#typed-welcome", {
-          strings: [
-            "SELAMAT DATANG DI ELECTRONIC FILLING SYSTEM PT SINAR JAYA",
-          ],
-          typeSpeed: 50,
-          backSpeed: 25,
-          loop: true,
-          showCursor: true,
-          cursorChar: "_",
-        })
-      })
-
-      function updateTime() {
-        const now = new Date()
-        const options = {
-          timeZone: "Asia/Jakarta",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false,
+        const typedTarget = document.getElementById("typed-welcome")
+        if (typedTarget) {
+          new Typed("#typed-welcome", {
+            strings: [
+              "SELAMAT DATANG DI ELECTRONIC FILLING SYSTEM PT SINAR JAYA",
+            ],
+            typeSpeed: 50,
+            backSpeed: 25,
+            loop: true,
+            showCursor: true,
+            cursorChar: "_",
+          })
         }
-        const timeString = now.toLocaleTimeString("en-GB", options)
-        document.getElementById("currentTime").textContent = timeString
-      }
 
-      function updateDate() {
-        const now = new Date()
-        const options = {
-          timeZone: "Asia/Jakarta",
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
+        const getData = (key) => {
+          try {
+            const raw = JSON.parse(localStorage.getItem(key))
+            return Array.isArray(raw) ? raw : []
+          } catch (error) {
+            return []
+          }
         }
-        const dateString = now.toLocaleDateString("id-ID", options)
-        document.getElementById("currentDate").textContent = dateString
-      }
 
-      setInterval(updateTime, 1000)
-      updateDate()
-      updateTime()
+        const suratMasuk = getData("reformaIndahSuratMasukData")
+        const suratKeluar = getData("reformaIndahSuratKeluarData")
 
-      document.getElementById("logout").addEventListener("click", () => {
-        sessionStorage.removeItem("isLoggedIn")
-        window.location.href = "index.html"
+        const totalMasukEl = document.getElementById("totalSuratMasuk")
+        const totalKeluarEl = document.getElementById("totalSuratKeluar")
+
+        if (totalMasukEl) totalMasukEl.textContent = suratMasuk.length
+        if (totalKeluarEl) totalKeluarEl.textContent = suratKeluar.length
+
+        const aggregateByDay = (rows) => {
+          const counts = {}
+          rows.forEach((item) => {
+            const dateString = item?.Tanggal_Surat
+            if (!dateString) return
+            const parsed = new Date(dateString)
+            if (Number.isNaN(parsed.getTime())) return
+            const isoKey = parsed.toISOString().split("T")[0]
+            counts[isoKey] = (counts[isoKey] || 0) + 1
+          })
+          return counts
+        }
+
+        const formatDayLabel = (isoDate) => {
+          const parsed = new Date(isoDate + "T00:00:00")
+          if (Number.isNaN(parsed.getTime())) return isoDate
+          return parsed.toLocaleDateString("id-ID", {
+            weekday: "short",
+            day: "2-digit",
+            month: "short",
+          })
+        }
+
+        const masukByDay = aggregateByDay(suratMasuk)
+        const keluarByDay = aggregateByDay(suratKeluar)
+
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+
+        const labels = []
+        const dateKeys = []
+
+        for (let i = 6; i >= 0; i--) {
+          const loopDate = new Date(today)
+          loopDate.setDate(today.getDate() - i)
+
+          const isoKey = loopDate.toISOString().split("T")[0]
+          dateKeys.push(isoKey)
+          labels.push(formatDayLabel(isoKey))
+        }
+
+        const masukSeries = dateKeys.map((key) => masukByDay[key] || 0)
+        const keluarSeries = dateKeys.map((key) => keluarByDay[key] || 0)
+
+        const chartCanvas = document.getElementById("suratChart")
+        if (chartCanvas && typeof Chart !== "undefined") {
+          new Chart(chartCanvas, {
+            type: "bar",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "Surat Masuk",
+                  data: masukSeries,
+                  backgroundColor: "#b91c1c",
+                  borderRadius: 6,
+                },
+                {
+                  label: "Surat Keluar",
+                  data: keluarSeries,
+                  backgroundColor: "#f97316",
+                  borderRadius: 6,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  display: true,
+                  position: "top",
+                },
+                tooltip: {
+                  backgroundColor: "#1f2937",
+                  titleColor: "#fff",
+                  bodyColor: "#f9fafb",
+                },
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    stepSize: 1,
+                    precision: 0,
+                  },
+                  title: {
+                    display: true,
+                    text: "Jumlah Surat",
+                  },
+                  grid: {
+                    color: "#f3f4f6",
+                  },
+                },
+                x: {
+                  title: {
+                    display: true,
+                    text: "Hari",
+                  },
+                  grid: {
+                    display: false,
+                  },
+                },
+              },
+            },
+          })
+        }
       })
     </script>
   </body>

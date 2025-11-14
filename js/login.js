@@ -10,6 +10,7 @@ $(document).ready(function () {
     const password = $("#password").val()
 
     if (validCredentials[username] === password) {
+      sessionStorage.setItem("username", username || "Pengguna")
       sessionStorage.setItem("isLoggedIn", "true")
 
       Swal.fire({

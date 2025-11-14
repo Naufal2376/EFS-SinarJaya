@@ -1,10 +1,28 @@
+const STORAGE_KEY = "reformaIndahSuratKeluarData"
+
+const sanitizeItem = (item) => ({
+  No_Agenda: item.No_Agenda ?? "",
+  Kementerian: item.Kementerian ?? item.Sifatnya ?? "",
+  Nama_Perusahaan: item.Nama_Perusahaan ?? "",
+  Alamat_Perusahaan: item.Alamat_Perusahaan ?? "",
+  Nomor_Surat: item.Nomor_Surat ?? "",
+  Tanggal_Surat: item.Tanggal_Surat ?? "",
+  Hal: item.Hal ?? "",
+  Penandatangan: item.Penandatangan ?? "",
+  Sifat: item.Sifat ?? "",
+  Tanggal_Pemusnahan: item.Tanggal_Pemusnahan ?? "",
+  PDF: item.PDF ?? "",
+})
+
 function loadTableData() {
-  const savedData = localStorage.getItem("reformaIndahSuratKeluarData")
-  return savedData ? JSON.parse(savedData) : []
+  const savedData = localStorage.getItem(STORAGE_KEY)
+  const raw = savedData ? JSON.parse(savedData) : []
+  return raw.map(sanitizeItem)
 }
 
 function saveTableData(data) {
-  localStorage.setItem("reformaIndahSuratKeluarData", JSON.stringify(data))
+  const serialized = data.map(sanitizeItem)
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(serialized))
 }
 
 function formatDate(date) {
@@ -23,22 +41,15 @@ $(document).ready(function () {
     responsive: true,
     columns: [
       { data: "No_Agenda" },
-      { data: "Sifatnya" },
+      { data: "Kementerian" },
       { data: "Nama_Perusahaan" },
       { data: "Alamat_Perusahaan" },
       { data: "Nomor_Surat" },
       { data: "Tanggal_Surat", render: (data) => formatDate(data) },
       { data: "Hal" },
       { data: "Penandatangan" },
-      {
-        data: "Photo",
-        width: "300px",
-        render: function (data) {
-          return data
-            ? `<a href="images/surat-keluar/${data}" target="_blank"><img src="images/surat-keluar/${data}" class="h-[200px] w-full object-contain rounded-md mx-auto"/></a>`
-            : "<span>-</span>"
-        },
-      },
+      { data: "Tanggal_Pemusnahan", render: (data) => formatDate(data) },
+      { data: "Sifat" },
       {
         data: null,
         render: function (data, type, row) {

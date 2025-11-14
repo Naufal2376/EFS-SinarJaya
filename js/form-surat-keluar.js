@@ -5,10 +5,30 @@ $(document).ready(function () {
   const submitButton = $("#formSubmitButton")
   const formTitle = $("#formTitle")
 
-  const loadData = () =>
-    JSON.parse(localStorage.getItem("reformaIndahSuratKeluarData")) || []
+  const sanitizeItem = (item) => ({
+    No_Agenda: item.No_Agenda ?? "",
+    Kementerian: item.Kementerian ?? item.Sifatnya ?? "",
+    Nama_Perusahaan: item.Nama_Perusahaan ?? "",
+    Alamat_Perusahaan: item.Alamat_Perusahaan ?? "",
+    Nomor_Surat: item.Nomor_Surat ?? "",
+    Tanggal_Surat: item.Tanggal_Surat ?? "",
+    Hal: item.Hal ?? "",
+    Penandatangan: item.Penandatangan ?? "",
+    Sifat: item.Sifat ?? "",
+    Tanggal_Pemusnahan: item.Tanggal_Pemusnahan ?? "",
+    PDF: item.PDF ?? "",
+  })
+
+  const loadData = () => {
+    const raw =
+      JSON.parse(localStorage.getItem("reformaIndahSuratKeluarData")) || []
+    return raw.map(sanitizeItem)
+  }
   const saveData = (data) =>
-    localStorage.setItem("reformaIndahSuratKeluarData", JSON.stringify(data))
+    localStorage.setItem(
+      "reformaIndahSuratKeluarData",
+      JSON.stringify(data.map(sanitizeItem))
+    )
 
   if (editingId) {
     formTitle.text("Edit Surat Keluar")
@@ -25,13 +45,15 @@ $(document).ready(function () {
         .val(dataToEdit.No_Agenda)
         .prop("readonly", true)
         .addClass("bg-gray-300")
-      $("#Sifatnya").val(dataToEdit.Sifatnya)
+      $("#Kementerian").val(dataToEdit.Kementerian || "")
+      $("#Sifat").val(dataToEdit.Sifat || "")
       $("#Nama_Perusahaan").val(dataToEdit.Nama_Perusahaan)
       $("#Alamat_Perusahaan").val(dataToEdit.Alamat_Perusahaan)
       $("#Nomor_Surat").val(dataToEdit.Nomor_Surat)
       $("#Tanggal_Surat").val(dataToEdit.Tanggal_Surat)
       $("#Hal").val(dataToEdit.Hal)
       $("#Penandatangan").val(dataToEdit.Penandatangan)
+      $("#Tanggal_Pemusnahan").val(dataToEdit.Tanggal_Pemusnahan)
       if (dataToEdit.PDF) {
         $("#pdfPreview")
           .removeClass("hidden")
@@ -39,35 +61,27 @@ $(document).ready(function () {
           .attr("href", `pdf/surat-keluar/${dataToEdit.PDF}`)
           .text(dataToEdit.PDF)
       }
-      if (dataToEdit.Photo) {
-        $("#imagePreview")
-          .removeClass("hidden")
-          .find("img")
-          .attr("src", `images/surat-keluar/${dataToEdit.Photo}`)
-      }
     }
   }
 
   form.on("submit", function (e) {
     e.preventDefault()
     let tableData = loadData()
-    const existingPhoto = editingId
-      ? tableData.find((item) => item.No_Agenda == editingId)?.Photo || null
-      : null
     const existingPDF = editingId
       ? tableData.find((item) => item.No_Agenda == editingId)?.PDF || null
       : null
 
     const formData = {
       No_Agenda: $("#No_Agenda").val(),
-      Sifatnya: $("#Sifatnya").val(),
+      Kementerian: $("#Kementerian").val(),
       Nama_Perusahaan: $("#Nama_Perusahaan").val(),
       Alamat_Perusahaan: $("#Alamat_Perusahaan").val(),
       Nomor_Surat: $("#Nomor_Surat").val(),
       Tanggal_Surat: $("#Tanggal_Surat").val(),
       Hal: $("#Hal").val(),
       Penandatangan: $("#Penandatangan").val(),
-      Photo: $("#Photo").prop("files")[0]?.name || existingPhoto,
+      Sifat: $("#Sifat").val(),
+      Tanggal_Pemusnahan: $("#Tanggal_Pemusnahan").val(),
       PDF: $("#PDF").prop("files")[0]?.name || existingPDF,
     }
 
@@ -76,7 +90,7 @@ $(document).ready(function () {
       tableData[index] = formData
     } else {
       if (tableData.some((item) => item.No_Agenda == formData.No_Agenda)) {
-        Swal.fire("Gagal!", "No. Agenda sudah digunakan.", "error")
+        Swal.fire("Gagal!", "No. Urut Agenda sudah digunakan.", "error")
         return
       }
       tableData.push(formData)

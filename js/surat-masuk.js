@@ -1,10 +1,29 @@
+const STORAGE_KEY = "reformaIndahSuratMasukData"
+
+const sanitizeItem = (item) => ({
+  No_Agenda: item.No_Agenda ?? "",
+  Kementerian: item.Kementerian ?? item.Sifatnya ?? "",
+  Nama_Perusahaan: item.Nama_Perusahaan ?? "",
+  Alamat_Perusahaan: item.Alamat_Perusahaan ?? "",
+  Nomor_Surat: item.Nomor_Surat ?? "",
+  Tanggal_Surat: item.Tanggal_Surat ?? "",
+  Ditujukan: item.Ditujukan ?? "",
+  Hal: item.Hal ?? "",
+  Penandatangan: item.Penandatangan ?? "",
+  Tanggal_Pemusnahan: item.Tanggal_Pemusnahan ?? "",
+  Sifat: item.Sifat ?? "",
+  PDF: item.PDF ?? "",
+})
+
 function loadTableData() {
-  const savedData = localStorage.getItem("reformaIndahSuratMasukData")
-  return savedData ? JSON.parse(savedData) : []
+  const savedData = localStorage.getItem(STORAGE_KEY)
+  const raw = savedData ? JSON.parse(savedData) : []
+  return raw.map(sanitizeItem)
 }
 
 function saveTableData(data) {
-  localStorage.setItem("reformaIndahSuratMasukData", JSON.stringify(data))
+  const serialized = data.map(sanitizeItem)
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(serialized))
 }
 
 function formatDate(date) {
@@ -23,7 +42,7 @@ $(document).ready(function () {
     responsive: true,
     columns: [
       { data: "No_Agenda" },
-      { data: "Sifatnya" },
+      { data: "Kementerian" },
       { data: "Nama_Perusahaan" },
       { data: "Alamat_Perusahaan" },
       { data: "Nomor_Surat" },
@@ -32,15 +51,7 @@ $(document).ready(function () {
       { data: "Hal" },
       { data: "Penandatangan" },
       { data: "Tanggal_Pemusnahan", render: (data) => formatDate(data) },
-      {
-        data: "Photo",
-        width: "300px",
-        render: function (data) {
-          return data
-            ? `<a href="images/surat-masuk/${data}" target="_blank"><img src="images/surat-masuk/${data}" class="h-[200px] w-full object-contain rounded-md mx-auto hover:scale-110 transition-transform duration-300"/></a>`
-            : "<span>-</span>"
-        },
-      },
+      { data: "Sifat" },
       {
         data: null,
         render: function (data, type, row) {

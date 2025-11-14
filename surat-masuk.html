@@ -54,69 +54,203 @@
       }
     </style>
   </head>
-  <body class="bg-cream-50">
-    <header
-      class="bg-gradient-to-r from-red-900 to-red-700 text-white p-4 flex justify-between items-center shadow-md"
-    >
-      <div class="flex items-center space-x-4">
-        <a href="index.html" class="hover:text-red-200"
-          ><i class="fas fa-arrow-left text-2xl"></i
-        ></a>
-        <h1 class="text-xl md:text-2xl font-bold">PT Sinar Jaya</h1>
-      </div>
-    </header>
+  <body class="bg-gray-100 min-h-screen">
+    <div class="flex min-h-screen">
+      <div
+        id="sidebarOverlay"
+        class="fixed inset-0 bg-black/40 z-30 hidden md:hidden"
+      ></div>
 
-    <main class="container mx-auto px-4 py-8">
-      <div class="bg-white rounded-2xl p-6 shadow-lg">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-3xl font-bold text-red-900">Data Surat Masuk</h2>
-          <a
-            href="form-surat-masuk.html"
-            class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-lg transition"
-          >
-            <i class="fas fa-plus mr-2"></i>Tambah Data
-          </a>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div class="col-span-2 flex justify-end gap-2">
-            <button
-              id="filterPopupBtn"
-              class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-lg transition"
-            >
-              <i class="fas fa-search mr-2"></i>Cari
-            </button>
-            <button
-              id="resetFilterBtn"
-              class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition"
-            >
-              <i class="fas fa-undo mr-2"></i>Reset
-            </button>
+      <aside
+        id="sidebar"
+        class="fixed inset-y-0 left-0 z-40 w-72 md:w-64 transform -translate-x-full md:translate-x-0 transition-transform duration-300 bg-gradient-to-b from-red-900 via-red-800 to-red-700 text-white shadow-xl flex flex-col"
+      >
+        <div class="p-6 flex items-center gap-4">
+          <img
+            src="images/logo.png"
+            alt="Logo"
+            class="h-16 w-16 object-contain"
+          />
+          <div>
+            <p class="text-xs uppercase tracking-widest text-red-200">
+              PT Sinar Jaya
+            </p>
+            <p class="text-lg font-bold leading-tight">
+              Electronic Filling System
+            </p>
           </div>
         </div>
-        <div class="w-full overflow-x-auto">
-          <table id="suratTable" class="w-full" style="width: 100%">
-            <thead class="bg-red-900 text-white">
-              <tr>
-                <th class="p-3">No Agenda</th>
-                <th class="p-3">Sifatnya</th>
-                <th class="p-3">Nama Perusahaan</th>
-                <th class="p-3">Alamat</th>
-                <th class="p-3">No Surat</th>
-                <th class="p-3">Tanggal Surat</th>
-                <th class="p-3">Ditujukan</th>
-                <th class="p-3">Hal</th>
-                <th class="p-3">Penandatangan</th>
-                <th class="p-3">Tanggal Pemusnahan</th>
-                <th class="p-3 min-w-[100px]">Photo</th>
-                <th class="p-3">Aksi</th>
-              </tr>
-            </thead>
-            <tbody class="text-gray-800"></tbody>
-          </table>
-        </div>
+        <nav class="flex-1 px-4 space-y-1">
+          <a
+            href="home.html"
+            data-nav-link="true"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg text-red-100 hover:bg-white/10 transition"
+          >
+            <i class="fas fa-gauge"></i>
+            <span>Dashboard</span>
+          </a>
+          <a
+            href="surat-masuk.html"
+            data-nav-link="true"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg text-red-100 hover:bg-white/10 transition"
+          >
+            <i class="fas fa-envelope-open-text"></i>
+            <span>Surat Masuk</span>
+          </a>
+          <a
+            href="surat-keluar.html"
+            data-nav-link="true"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg text-red-100 hover:bg-white/10 transition"
+          >
+            <i class="fas fa-paper-plane"></i>
+            <span>Surat Keluar</span>
+          </a>
+          <a
+            href="laporan-masuk.html"
+            data-nav-link="true"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg text-red-100 hover:bg-white/10 transition"
+          >
+            <i class="fas fa-file-alt"></i>
+            <span>Laporan Surat Masuk</span>
+          </a>
+          <a
+            href="laporan-keluar.html"
+            data-nav-link="true"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg text-red-100 hover:bg-white/10 transition"
+          >
+            <i class="fas fa-file-invoice"></i>
+            <span>Laporan Surat Keluar</span>
+          </a>
+        </nav>
+      </aside>
+
+      <div class="flex-1 flex flex-col w-full md:pl-64">
+        <header
+          class="bg-white shadow-sm px-6 py-4 flex items-center justify-between sticky top-0 z-20"
+        >
+          <div class="flex items-center gap-4">
+            <button
+              id="sidebarToggle"
+              class="md:hidden text-red-800 hover:text-red-900 transition"
+            >
+              <i class="fas fa-bars text-2xl"></i>
+            </button>
+            <div>
+              <h1 class="text-2xl md:text-3xl font-extrabold text-red-900 leading-tight">
+                Electronic Filling System
+              </h1>
+              <p class="text-sm font-semibold text-gray-500">
+                PT Sinar Jaya (Mitra Bangun Karya Mandiri)
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-6 text-red-900 font-semibold">
+            <div class="text-right hidden sm:block">
+              <p id="currentDate" class="text-sm text-gray-500"></p>
+              <p id="currentTime" class="text-xl font-bold"></p>
+            </div>
+            <div class="relative">
+              <button
+                id="userMenuToggle"
+                class="flex items-center gap-2 bg-red-100 text-red-800 hover:bg-red-200 px-3 py-2 rounded-full font-semibold transition"
+              >
+                <span id="currentUserName" class="hidden sm:inline"></span>
+                <i class="fas fa-user-circle text-2xl"></i>
+              </button>
+              <div
+                id="userMenu"
+                class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden"
+              >
+                <button
+                  id="logout"
+                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-50 flex items-center gap-2"
+                >
+                  <i class="fas fa-sign-out-alt text-red-600"></i>
+                  Keluar
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto bg-gray-100 p-6 space-y-6">
+          <section class="bg-white rounded-2xl shadow-md p-6 space-y-6">
+            <div
+              class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
+            >
+              <div>
+                <h2 class="text-3xl font-bold text-red-900">Data Surat Masuk</h2>
+              </div>
+              <div
+                class="flex flex-wrap justify-end gap-2"
+              >
+                <a
+                  href="form-surat-masuk.html"
+                  class="bg-red-700 hover:bg-red-800 text-white font-bold py-2.5 px-4 rounded-lg transition flex items-center gap-2"
+                >
+                  <i class="fas fa-plus"></i>
+                  Tambah Data
+                </a>
+                <button
+                  id="filterPopupBtn"
+                  class="bg-red-700 hover:bg-red-800 text-white font-bold py-2.5 px-4 rounded-lg transition flex items-center gap-2"
+                >
+                  <i class="fas fa-search"></i>
+                  Cari
+                </button>
+                <button
+                  id="resetFilterBtn"
+                  class="bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-4 rounded-lg transition flex items-center gap-2"
+                >
+                  <i class="fas fa-undo"></i>
+                  Reset
+                </button>
+              </div>
+            </div>
+            <div class="w-full overflow-x-auto">
+              <table id="suratTable" class="w-full">
+                <thead class="bg-red-900 text-white">
+                  <tr>
+                    <th class="p-3">No Urut Agenda</th>
+                    <th class="p-3">Kementerian</th>
+                    <th class="p-3">Nama Perusahaan</th>
+                    <th class="p-3">Alamat</th>
+                    <th class="p-3">No Surat</th>
+                    <th class="p-3">Tanggal Surat</th>
+                    <th class="p-3">Ditujukan</th>
+                    <th class="p-3">Hal</th>
+                    <th class="p-3">Penandatangan</th>
+                    <th class="p-3">Tanggal Pemusnahan</th>
+                    <th class="p-3">Sifat</th>
+                    <th class="p-3">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody class="text-gray-800"></tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+
+        <footer class="bg-white shadow-inner px-6 py-4 text-center text-xs text-red-900">
+          <p>
+            <span class="font-bold"
+              >PT SINAR JAYA (Mitra Bangun Karya Mandiri)</span
+            >
+            |
+            <span class="italic"
+              >Jalan Ahmad Yani Nomor 161 Palembang, 30161</span
+            >
+            |
+            <span>Telp: (0711) 555-1234</span> |
+            <span>Email: info@sinarjaya.com</span> |
+            <span>Laman: www.sinarjayakarya.com</span>
+          </p>
+        </footer>
       </div>
-    </main>
+    </div>
+
     <input type="file" id="jsonImportInput" class="hidden" accept=".json" />
+    <script src="js/layout.js"></script>
     <script src="js/surat-masuk.js"></script>
     <script>
       $(document).ready(function () {
